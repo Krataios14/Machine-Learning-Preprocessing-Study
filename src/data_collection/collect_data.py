@@ -46,7 +46,6 @@ def main():
     # List of all data files to collect
     data_files = ['yahoo_stock_prices', ]
 
-
 # 'technical_indicators', 'fundamental_data',
 # 'market_sentiment', 'economic_indicators', 'commodity_prices'
     for filename in data_files:

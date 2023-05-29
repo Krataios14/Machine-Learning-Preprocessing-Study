@@ -17,7 +17,7 @@ def main():
     # Read the processed stock price data
     data = pd.read_csv('./data/processed_data/yahoo_stock_prices_processed.csv')
 
-    # Calculate Moving Average for 'Close' column
+    # Calculate Moving Average
     moving_average = calculate_moving_average(data, window_size, 'Close')
 
     # Convert the features into a DataFrame for easier handling

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 # Load the raw data
 raw_data = pd.read_csv('./data/raw_data/yahoo_stock_prices.csv')
 
-# Assume the 'Date' and 'Close' are the columns in your raw data
+
 raw_dates = pd.to_datetime(raw_data['Date'])
 raw_values = raw_data['Close']
 

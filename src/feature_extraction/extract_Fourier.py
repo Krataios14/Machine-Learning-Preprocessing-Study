@@ -19,7 +19,7 @@ def main():
     # Read the processed stock price data
     data = pd.read_csv('./data/processed_data/yahoo_stock_prices_processed.csv')
 
-    # Apply Fourier Transform on 'Close' column
+    # Apply Fourier Transform
     Fourier_features = Fourier_transform(data, 'Close')
 
     # Convert the features into a DataFrame for easier handling
