@@ -9,7 +9,7 @@ raw_dates = pd.to_datetime(raw_data['Date'])
 raw_values = raw_data['Close']
 
 # Load the predictions
-predictions = pd.read_csv('./results/predictions.csv')
+predictions = pd.read_csv('./results/predictions.csv', usecols=[1])
 
 # Set prediction_dates based on your prediction start date and the number of predictions
 prediction_start_date = '2023-05-26'
