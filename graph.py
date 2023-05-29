@@ -12,7 +12,8 @@ raw_values = raw_data['Close']
 predictions = pd.read_csv('./results/predictions.csv', usecols=[1])
 
 # Set prediction_dates based on your prediction start date and the number of predictions
-prediction_start_date = '2023-05-26'
+
+prediction_start_date = raw_dates.iloc[-1] + pd.Timedelta(days=1)
 prediction_dates = pd.date_range(
     start=prediction_start_date, periods=len(predictions))
 
