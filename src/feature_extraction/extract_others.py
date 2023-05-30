@@ -16,12 +16,12 @@ def main():
 
     # Read the processed stock price data
     data = pd.read_csv('./data/processed_data/yahoo_stock_prices_processed.csv')
-    window_size= int(len(data)*windwo_size_percentage)
+    window_size= int(len(data)*window_size_percentage)
     if window_size<1:
         window_size=1
     # Calculate Moving Average
     moving_average = calculate_moving_average(data, window_size, 'Close')
-    moving_average.to_cvs('./data/features/Moving_Averages.cvs', header=['Moving_Average'])
+    moving_average.to_csv('./data/features/Moving_Averages.csv', header=['Moving_Average'])
     
     # Convert the features into a DataFrame for easier handling
     #     moving_average_df = pd.DataFrame(
