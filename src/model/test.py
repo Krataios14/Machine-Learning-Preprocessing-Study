@@ -6,6 +6,8 @@ import pickle
 import os
 
 # Function to prepare data for LSTM input
+
+
 def prepare_data(data, lookback):
     X, y = [], []
     for i in range(len(data)-lookback-1):
@@ -15,24 +17,28 @@ def prepare_data(data, lookback):
     return np.array(X), np.array(y)
 
 # Function to reverse the scaling for a list of values
+
+
 def reverse_scale(scaler, predictions):
     return scaler.inverse_transform(predictions)
+
 
 def main():
     # Define the lookback period
     lookback = 60
 
-    # Load the trained model
-    model = load_model('./models/saved_model.h5')
-
     # Iterate over each test dataset
     for i in range(15):
         filename = f'simulated{i+1}'
         test_file = f'./data/processed_data/{filename}_test.csv'
+        model_file = f'./models/saved_model_{i+1}.h5'
 
         # check if the file exists
-        if not os.path.exists(test_file):
+        if not os.path.exists(test_file) or not os.path.exists(model_file):
             continue
+
+        # Load the trained model
+        model = load_model(model_file)
 
         # Read the test data
         data = pd.read_csv(test_file)
@@ -62,6 +68,7 @@ def main():
         # Save evaluation metrics
         pd.DataFrame([mse, mae], index=['MSE', 'MAE'], columns=[
                      'Value']).to_csv(f'./results/evaluation_metrics_{i+1}.csv')
+
 
 if __name__ == "__main__":
     main()

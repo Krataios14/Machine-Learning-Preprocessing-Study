@@ -9,6 +9,8 @@ import pickle
 import os
 
 # Function to prepare data for LSTM input
+
+
 def prepare_data(data, lookback):
     X, y = [], []
     for i in range(len(data)-lookback-1):
@@ -17,15 +19,11 @@ def prepare_data(data, lookback):
         y.append(data[i + lookback, 0])
     return np.array(X), np.array(y)
 
-def main():
-    # Define the lookback period and number of epochs
-    lookback = 60
-    epochs = 500
 
+def create_and_train_model(X_train, y_train, lookback, epochs):
     # Define the LSTM model
     model = Sequential()
-    model.add(LSTM(units=50, return_sequences=True,
-            input_shape=(lookback, 1)))
+    model.add(LSTM(units=50, return_sequences=True, input_shape=(lookback, 1)))
     model.add(Dropout(0.2))
     model.add(LSTM(units=50))
     model.add(Dropout(0.2))
@@ -36,6 +34,18 @@ def main():
 
     # Define the early stopping criteria
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=10)
+
+    # Train the model
+    model.fit(X_train, y_train, epochs=epochs, batch_size=32,
+              validation_split=0.2, callbacks=[es])
+
+    return model
+
+
+def main():
+    # Define the lookback period and number of epochs
+    lookback = 60
+    epochs = 500
 
     # iterate through each training dataset
     for i in range(15):
@@ -57,12 +67,15 @@ def main():
         data_scaled = scaler.transform(data)
         X_train, y_train = prepare_data(data_scaled, lookback)
 
-        # Train the model
-        model.fit(X_train, y_train, epochs=epochs, batch_size=32,
-              validation_split=0.2, callbacks=[es])
+        # Create and train the model for each dataset
+        model = create_and_train_model(X_train, y_train, lookback, epochs)
 
-    # Save the model
-    model.save('./models/saved_model.h5')
+        # Save the model for each dataset
+        model.save(f'./models/saved_model_{i+1}.h5')
+        print(f'model {i+1} saved')
+
     print('training completed')
+
+
 if __name__ == "__main__":
     main()

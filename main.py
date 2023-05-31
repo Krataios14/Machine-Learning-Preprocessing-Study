@@ -3,7 +3,9 @@ import pandas as pd
 
 def main():
     print("Starting the pipeline...")
-    
+     
+    print("Generating simulated data...")
+    subprocess.run(["python", "./src/brownian_simulation/Brownian_transformation.py"])
     print("Collecting data...")
     subprocess.run(["python", "./src/data_collection/collect_data.py"])
 
