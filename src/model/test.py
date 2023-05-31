@@ -23,7 +23,7 @@ def prepare_data(data, lookback):
 
 def reverse_scale(predictions):
     # Load the target_scaler used during training
-    with open('.\\data\\processed_data\\target_scaler.pkl', 'rb') as file:
+    with open('./data/processed_data/target_scaler.pkl', 'rb') as file:
         scaler = pickle.load(file)
     # Perform the inverse transformation
     return scaler.inverse_transform(predictions)
