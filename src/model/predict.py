@@ -3,58 +3,54 @@ import pickle
 import numpy as np
 import pandas as pd
 from keras.models import load_model
-from sklearn.preprocessing import MinMaxScaler
-import joblib
 
 # Function to prepare data for LSTM input
-
-
 def prepare_data(data, lookback):
     X = []
     for i in range(len(data)-lookback-1):
-        t = data[i:(i+lookback), :]
+        t = data[i:(i+lookback), 0]
         X.append(t)
     return np.array(X)
 
 # Function to reverse the scaling for a list of values
-
-
-def reverse_scale(predictions):
-    # Load the target_scaler used during training
-    with open('./data/processed_data/target_scaler.pkl', 'rb') as file:
-        target_scaler = pickle.load(file)
-    # Perform the inverse transformation
-    return target_scaler.inverse_transform(predictions)
-
+def reverse_scale(scaler, predictions):
+    return scaler.inverse_transform(predictions)
 
 def main():
     # Define the lookback period
     lookback = 60
 
     # Load the trained model
-    model = load_model('./models/saved_models.h5')
+    model = load_model('./models/saved_model.h5')
 
-    # Load the data scaler
-    scaler = joblib.load('./models/scaler.pkl')
+    # Iterate over each test dataset
+    for i in range(15):
+        filename = f'simulated{i+1}'
+        test_file = f'./data/processed_data/{filename}_test.csv'
 
-    # Read the data
-    data = pd.read_csv('./data/processed_data/yahoo_stock_prices_test.csv')
+        # check if the file exists
+        if not os.path.exists(test_file):
+            continue
 
-    # Scale the data
-    data_scaled = scaler.transform(data)
+        # Read the test data
+        data = pd.read_csv(test_file)
 
-    # Prepare the data for LSTM input
-    X_test = prepare_data(data_scaled, lookback)
+        # Load the scaler
+        with open(f'./data/processed_data/target_scaler_{i+1}.pkl', 'rb') as file:
+            scaler = pickle.load(file)
 
-    # Generate predictions
-    predictions = model.predict(X_test)
+        # Prepare the data for LSTM input
+        data_scaled = scaler.transform(data)
+        X_test = prepare_data(data_scaled, lookback)
 
-    # Reverse the scaling for the predictions
-    predictions = reverse_scale(predictions)
+        # Generate predictions
+        predictions = model.predict(X_test)
 
-    # Write the predictions to a CSV file
-    pd.DataFrame(predictions).to_csv('./results/predictions.csv')
+        # Reverse the scaling for the predictions
+        predictions = reverse_scale(scaler, predictions)
 
+        # Write the predictions to a CSV file
+        pd.DataFrame(predictions).to_csv(f'./results/predictions_{i+1}.csv')
 
 if __name__ == "__main__":
     main()

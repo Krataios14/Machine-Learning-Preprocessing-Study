@@ -2,6 +2,8 @@ import subprocess
 import pandas as pd
 
 def main():
+    print("Starting the pipeline...")
+    
     print("Collecting data...")
     subprocess.run(["python", "./src/data_collection/collect_data.py"])
 
