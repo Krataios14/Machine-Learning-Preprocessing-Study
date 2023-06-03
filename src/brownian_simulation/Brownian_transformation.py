@@ -32,7 +32,7 @@ if not os.path.exists(historical_data_file):
 
 # Load data
 historical_data = pd.read_csv(historical_data_file)
-
+length=len(historical_data)
 # Validate data
 if 'Close' not in historical_data.columns:
     print("Error: 'Close' column not found in historical data!")
@@ -46,7 +46,7 @@ iterations = 15
 
 # Simulate GBM
 for i in range(iterations):
-    simulation = simulate_gbm(historical_data['Close'].iloc[-1], drift, stdev, len(historical_data), 1)
+    simulation = simulate_gbm(historical_data['Close'].iloc[-1], drift, stdev, length, 1)
     simulation_file = f'./data/raw_data/simulated{i+1}.csv' 
     np.savetxt(simulation_file, simulation, delimiter=",")
     plt.figure(figsize=(10,6))
